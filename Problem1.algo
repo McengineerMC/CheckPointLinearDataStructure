@@ -1,0 +1,89 @@
+//solution1
+ALGORITHM Problem1_solution1
+VAR
+    tab1 : ARRAY_OF INTEGER[50];
+    tab2 : ARRAY_OF INTEGER[50];
+    sum1,sum2,sum : INTEGER := 0;
+    count1,count2 : INTEGER := 0;
+    i,j : INTEGER;
+BEGIN
+//entrer le premier tableau
+    FOR i FROM 0 TO tab1.length-1   DO
+        Read(tab1[i]);
+    END_FOR
+//entrer le deuxiemme tableau
+    FOR i FROM 0 TO tab2.length-1   DO
+        Read(tab2[i]);
+    END_FOR
+//comparer chaque element de tab1 au tab2
+    FOR i FROM 0 TO tab1.length-1 STEP 1  DO
+    count1:=0;
+        FOR j FROM 0 TO tab2.length-1 STEP 1  DO
+            IF (tab1[i] = tab2[j]) THEN
+                count1 := count1 + 1;
+            END_IF
+        END_FOR
+        IF (count1 = 0) THEN
+            sum1 := sum1 + tab1[i];//somme des elements de tab1 qui ne se trouve pas au tab2
+        END_IF
+    END_FOR
+//comparer chaque element de tab2 au tab1
+    FOR i FROM 0 TO tab2.length-1 STEP 1  DO
+   count2:=0;
+        FOR j FROM 0 TO tab1.length-1 STEP 1  DO
+            IF (tab2[i] = tab1[j]) THEN
+                count2 := count2 + 1;
+            END_IF
+        END_FOR
+        IF (count2 = 0) THEN
+            sum2 := sum2 + tab2[i];//somme des elements de tab2 qui ne se trouve pas au tab1
+        END_IF
+    END_FOR
+
+    sum := sum1 + sum2;//somme globale (somme de tout les elements distinctes)
+    Write(sum);
+END
+//solution2
+ALGORITHM problem1_solution2
+VAR
+    tab1 : ARRAY_OF INTEGER[100];
+    tab2 : ARRAY_OF INTEGER[100];
+    tab3 : ARRAY_OF INTEGER[100] := [];
+    htab: HASH_TABLE<INTEGER,INTEGER>;
+    i,j : INTEGER;
+    sum : INTEGER := 0;
+    count : INTEGER;
+BEGIN
+//entrer le premier tableau
+    FOR i FROM 0 TO tab1.length-1   DO
+        Read(tab1[i]);
+    END_FOR
+//entrer le deuxiemme tableau
+    FOR i FROM 0 TO tab2.length-1   DO
+        Read(tab2[i]);
+    END_FOR
+//mettre les deux tableaux dans un seul tableau
+    FOR i FROM 0 TO tab1.length-1 STEP 1  DO
+        tab3[i]:=tab1[i];//inserer le tableau 1 dans le nouveau tableau
+    END_FOR
+    FOR i FROM 0 TO tab2.length-1 STEP 1  DO
+        j := tab3.length;
+        tab3[j]:=tab2[i];// inserer le tableau 2 dans le nouveau tableau
+    END_FOR
+// insrer les elements de tableau avec leur  count dans hashtable
+    FOR i FROM 0 TO tab3.length-1 STEP 1  DO
+        IF (htab.lookup(tab3[i]) = TRUE) THEN
+            count := htab.get(tab3[i]);
+            htab.insert(tab3[i],count+1);
+        ELSE
+            htab.insert(tab3[i],1);
+        END_IF
+    END_FOR
+//faire la somme de tous les éléments avec count = 1
+    FOR i FROM 0 TO tab3.length-1 STEP 1  DO
+        IF (htab.get(tab3[i])=1) THEN
+            sum:=sum+tab3[i];
+        END_IF
+    END_FOR
+    Write(sum);
+END
